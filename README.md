@@ -6,6 +6,14 @@ A Discord bot that exposes your server's public IP address as a slash command.
 ![Release](https://github.com/ByteLuka/CheckIpBot/actions/workflows/release.yml/badge.svg)
 ![Latest Release](https://img.shields.io/github/v/release/ByteLuka/CheckIpBot)
 
+## Table of Contents
+
+- [Commands](#commands)
+- [Installation (Docker Compose)](#installation-docker-compose)
+- [Installation (Kubernetes)](#installation-kubernetes)
+- [Development (local)](#development-local)
+- [Contributing](#contributing)
+
 ## Commands
 
 | Command   | Description                                               |
