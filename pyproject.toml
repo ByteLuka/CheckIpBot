@@ -1,0 +1,8 @@
+[project]
+name = "checkipbot"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "colorlog>=6.10.1",
+    "discord-py-interactions>=5.16.0",
+]
