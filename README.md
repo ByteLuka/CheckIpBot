@@ -12,6 +12,27 @@ A Discord bot that exposes your server's public IP address as a slash command.
 |-----------|-----------------------------------------------------------|
 | `/get-ip` | Returns the public IP address of the host running the bot |
 
+## Installation (Docker Compose)
+
+### Prerequisites
+
+- Docker with Compose (v2)
+- A Discord bot token — see [docs/discord-token.md](docs/discord-token.md) if you need to create one
+
+### Run
+
+1. Download the provided `docker-compose.yml`
+2. Replace `your_discord_token_here` with your bot token
+3. Start the bot:
+
+```bash
+docker compose up -d
+```
+
+Optionally set `LOG_LEVEL` to `DEBUG`, `WARNING`, `ERROR`, or `CRITICAL` (default is `INFO`).
+
+---
+
 ## Installation (Kubernetes)
 
 ### Prerequisites
