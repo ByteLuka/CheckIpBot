@@ -1,0 +1,24 @@
+image:
+  repository: ghcr.io/yourusername/checkipbot
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+
+discord:
+  # Name of an existing secret with a DISCORD_TOKEN key.
+  # If set, tokenSecret.create is ignored.
+  existingSecret: ""
+  token: ""
+
+tokenSecret:
+  create: true
+  name: checkipbot-token
+
+logLevel: INFO
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
