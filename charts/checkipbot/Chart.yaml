@@ -2,5 +2,5 @@ apiVersion: v2
 name: checkipbot
 description: Discord bot for IP lookup commands
 type: application
-version: 0.1.0
-appVersion: "latest"
+version: 1.0.0
+appVersion: "1.0.0"
