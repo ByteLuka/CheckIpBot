@@ -15,20 +15,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - name: Install Rust toolchain
+        run: rustup toolchain install stable --profile minimal --component rustfmt,clippy
 
-      - name: Set up Python
-        run: uv python install
+      - name: Cache cargo build
+        uses: Swatinem/rust-cache@v2
 
-      - name: Install dev dependencies
-        run: uv sync --group dev
+      - name: Format check (cargo fmt)
+        run: cargo fmt --all --check
 
-      - name: Lint (ruff check)
-        run: uv run ruff check .
-
-      - name: Format check (ruff format)
-        run: uv run ruff format --check .
+      - name: Lint (cargo clippy)
+        run: cargo clippy --locked --all-targets -- -D warnings
 
   release:
     needs: lint
@@ -47,7 +44,8 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          sed -i "s/^version = \"[^\"]*\"/version = \"$VERSION\"/" pyproject.toml
+          sed -i "s/^version = \"[^\"]*\"/version = \"$VERSION\"/" Cargo.toml
+          sed -i "/^name = \"checkipbot\"$/{n;s/^version = .*/version = \"$VERSION\"/}" Cargo.lock
           sed -i "s/^version: .*/version: $VERSION/" charts/checkipbot/Chart.yaml
           sed -i "s/^appVersion: .*/appVersion: \"$VERSION\"/" charts/checkipbot/Chart.yaml
 
@@ -57,7 +55,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add pyproject.toml charts/checkipbot/Chart.yaml
+          git add Cargo.toml Cargo.lock charts/checkipbot/Chart.yaml
           git commit -m "chore: bump version to $VERSION [skip ci]"
           git push
 

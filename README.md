@@ -99,8 +99,8 @@ helm upgrade checkipbot oci://ghcr.io/byteluka/charts/checkipbot \
 
 ### Prerequisites
 
-- Python 3.14+
-- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- [Rust](https://www.rust-lang.org/tools/install) (stable toolchain, including `rustfmt` and `clippy`)
+- [pre-commit](https://pre-commit.com/#install)
 - A Discord bot token — see [docs/discord-token.md](docs/discord-token.md)
 
 ### Setup
@@ -109,42 +109,38 @@ helm upgrade checkipbot oci://ghcr.io/byteluka/charts/checkipbot \
 git clone https://github.com/ByteLuka/CheckIpBot.git
 cd CheckIpBot
 
-# Install dependencies (including dev tools)
-uv sync --group dev
-
 # Install pre-commit hooks
-uv run pre-commit install
+pre-commit install
 ```
 
 ### Run
 
 ```bash
-DISCORD_TOKEN=<your-token> uv run python bot.py
+DISCORD_TOKEN=<your-token> cargo run
 ```
 
 Set `LOG_LEVEL=DEBUG` for verbose output:
 
 ```bash
-LOG_LEVEL=DEBUG DISCORD_TOKEN=<your-token> uv run python bot.py
+LOG_LEVEL=DEBUG DISCORD_TOKEN=<your-token> cargo run
 ```
 
 ### Lint and format
 
 ```bash
-uv run ruff check .           # lint
-uv run ruff check --fix .     # lint with auto-fix
-uv run ruff format .          # format
-uv run ruff format --check .  # format check (no writes)
+cargo clippy --all-targets -- -D warnings  # lint
+cargo fmt                                  # format
+cargo fmt --check                          # format check (no writes)
 ```
 
 Pre-commit runs both automatically on every commit once installed.
 
 ### Adding a new command
 
-1. Create a new file under `extensions/` (or add to an existing one) with an `Extension` subclass
-2. Register it in `bot.py` with `bot.load_extension("extensions.<module_name>")`
+1. Create a new module under `src/commands/` with a `register` function returning the `CreateCommand` and a `run` function handling the interaction
+2. Add it to `all()` in `src/commands/mod.rs` and dispatch it in `interaction_create` in `src/main.rs`
 
-See `extensions/ip_commands.py` for a minimal example.
+See `src/commands/ip.rs` for a minimal example.
 
 ---
 
@@ -158,7 +154,7 @@ Bug fixes and small improvements can go straight to a pull request.
 
 1. Fork the repository and create a branch from `master`
 2. Make your changes
-3. Ensure pre-commit hooks pass: `uv run pre-commit run --all-files`
+3. Ensure pre-commit hooks pass: `pre-commit run --all-files`
 4. Open a pull request — fill in the template
 
 ### Releases

@@ -8,6 +8,6 @@ Closes #
 
 ## Checklist
 
-- [ ] Pre-commit hooks pass (`uv run pre-commit run --all-files`)
+- [ ] Pre-commit hooks pass (`pre-commit run --all-files`)
 - [ ] Tested locally with a real Discord token
 - [ ] No unrelated changes included

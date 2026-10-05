@@ -1,22 +1,14 @@
-FROM ghcr.io/astral-sh/uv:python3.14-bookworm-slim AS builder
+FROM rust:1-bookworm AS builder
 
 WORKDIR /app
-COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-cache
+COPY Cargo.toml Cargo.lock ./
+COPY src/ ./src/
+RUN cargo build --release --locked
 
 
-FROM python:3.14-slim-bookworm AS runtime
+FROM gcr.io/distroless/cc-debian12 AS runtime
 
-RUN adduser --disabled-password --gecos "" botuser
+COPY --from=builder /app/target/release/checkipbot /usr/local/bin/checkipbot
 
-WORKDIR /app
-COPY --from=builder /app/.venv /app/.venv
-COPY bot.py ./
-COPY extensions/ ./extensions/
-
-ENV PATH="/app/.venv/bin:$PATH" \
-    PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
-
-USER botuser
-CMD ["python", "bot.py"]
+USER 1000:1000
+ENTRYPOINT ["/usr/local/bin/checkipbot"]

@@ -34,7 +34,7 @@ Pass the token to the bot via the `DISCORD_TOKEN` environment variable:
 
 ```bash
 # Local development
-DISCORD_TOKEN=<your-token> uv run python bot.py
+DISCORD_TOKEN=<your-token> cargo run
 
 # Kubernetes — see README.md for Helm installation options
 ```

@@ -1,7 +1,14 @@
 repos:
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.12
+  - repo: local
     hooks:
-      - id: ruff          # linting + auto-fix
-        args: [--fix]
-      - id: ruff-format   # formatting
+      - id: cargo-fmt     # formatting
+        name: cargo fmt
+        entry: cargo fmt --all --
+        language: system
+        types: [rust]
+      - id: cargo-clippy  # linting
+        name: cargo clippy
+        entry: cargo clippy --locked --all-targets -- -D warnings
+        language: system
+        types: [rust]
+        pass_filenames: false

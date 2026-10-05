@@ -6,22 +6,19 @@ on:
   pull_request:
 
 jobs:
-  ruff:
+  cargo:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - name: Install Rust toolchain
+        run: rustup toolchain install stable --profile minimal --component rustfmt,clippy
 
-      - name: Set up Python
-        run: uv python install
+      - name: Cache cargo build
+        uses: Swatinem/rust-cache@v2
 
-      - name: Install dev dependencies
-        run: uv sync --group dev
+      - name: Format check (cargo fmt)
+        run: cargo fmt --all --check
 
-      - name: Lint (ruff check)
-        run: uv run ruff check .
-
-      - name: Format check (ruff format)
-        run: uv run ruff format --check .
+      - name: Lint (cargo clippy)
+        run: cargo clippy --locked --all-targets -- -D warnings
